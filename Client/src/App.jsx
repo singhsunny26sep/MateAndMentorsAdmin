@@ -65,19 +65,10 @@ const App = () => {
                   path="/category/update/:id"
                   element={<CategoryAddEdit />}
                 />
-                {/* <Route path="/experts" element={<Experts />} />
-                <Route path="/products" element={<Products />} />
-                <Route path="/enquiries" element={<Enquiries />} />
-                <Route
-                  path="/prenatal-services"
-                  element={<PrenatalServices />}
-                />
-                <Route path="/nutrition" element={<Nutrition />} />
-                <Route path="/gallery" element={<Gallery />} /> */}
-                {/* Default redirect to dashboard */}
+              
                 <Route
                   path="/"
-                  element={<Navigate to="/dashboard" replace />}
+                  element={<Navigate to="/" replace />}
                 />
                 <Route
                   path="*"
