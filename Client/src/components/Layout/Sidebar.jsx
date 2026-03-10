@@ -65,18 +65,8 @@ const Sidebar = () => {
             icon: icons.mentees,
             color: "text-pink-500",
           },
-          {
-            name: "Add Mentee",
-            path: "/mentee/add",
-            icon: icons.mentees,
-            color: "text-red-500",
-          },
-          {
-            name: "Questions & Answers",
-            path: "/questions",
-            icon: icons.tips,
-            color: "text-blue-600",
-          },
+         
+         
           {
             name: "Categories",
             path: "/category",
