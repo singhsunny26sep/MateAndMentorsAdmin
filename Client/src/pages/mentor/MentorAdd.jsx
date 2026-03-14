@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Save, User, Mail, Phone, Briefcase, BookOpen } from "lucide-react";
+import { ArrowLeft, Save, User, Mail, Phone, Briefcase, BookOpen, Globe } from "lucide-react";
 import { toast } from "react-hot-toast";
 
 const MentorAdd = () => {
@@ -9,6 +9,7 @@ const MentorAdd = () => {
     name: "",
     email: "",
     phone: "",
+    language: "",
     expertise: "",
     experience: "",
     bio: "",
@@ -156,6 +157,37 @@ const MentorAdd = () => {
               {errors.phone && (
                 <p className="mt-1 text-sm text-red-500">{errors.phone}</p>
               )}
+            </div>
+
+            {/* Language */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Preferred Language
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Globe className="h-5 w-5 text-gray-400" />
+                </div>
+                <select
+                  name="language"
+                  value={formData.language}
+                  onChange={handleChange}
+                  className="pl-10 w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all appearance-none bg-white"
+                >
+                  <option value="">Select preferred language</option>
+                  <option value="English">English</option>
+                  <option value="Hindi">Hindi</option>
+                  <option value="Marathi">Marathi</option>
+                  <option value="Gujarati">Gujarati</option>
+                  <option value="Tamil">Tamil</option>
+                  <option value="Telugu">Telugu</option>
+                  <option value="Kannada">Kannada</option>
+                  <option value="Malayalam">Malayalam</option>
+                  <option value="Bengali">Bengali</option>
+                  <option value="Punjabi">Punjabi</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
             </div>
 
             {/* Expertise */}

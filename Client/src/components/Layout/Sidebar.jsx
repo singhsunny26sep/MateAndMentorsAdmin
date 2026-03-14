@@ -53,14 +53,14 @@ const Sidebar = () => {
             color: "text-purple-500",
           },
           {
-            name: "Mentors",
+            name: "Mates",
             path: "/mentors",
             icon: icons.mentors,
             color: "text-blue-500",
           },
           
           {
-            name: "Mentees",
+            name: "Mentors",
             path: "/mentees",
             icon: icons.mentees,
             color: "text-pink-500",
@@ -68,50 +68,13 @@ const Sidebar = () => {
          
          
           {
-            name: "Categories",
-            path: "/category",
-            icon: icons.categories,
-            color: "text-orange-500",
-          },
-          {
-            name: "Sessions",
-            path: "/sessions",
-            icon: icons.sessions,
-            color: "text-pink-500",
-          },
-          {
-            name: "Contact Inquiries",
-            path: "/contact-inquiries",
-            icon: icons.enquiries,
-            color: "text-emerald-500",
-          },
-          {
             name: "Gallery",
             path: "/gallery",
             icon: icons.gallery,
             color: "text-teal-500",
           },
         ];
-      // case "mate":
-      // return [
-      //   ...commonItems,
-      // {
-      //     name: "Sessions",
-      //     path: "/sessions",
-      //     icon: icons.sessions,
-      //     color: "text-pink-500",
-      //   },
-      // ];
-      // case "mentor":
-      //   return [
-      //     ...commonItems,
-      // {
-      //     name: "Sessions",
-      //     path: "/sessions",
-      //     icon: icons.sessions,
-      //     color: "text-pink-500",
-      //   },
-      //   ];
+     
       default:
         return commonItems;
     }

@@ -120,7 +120,7 @@ const MenteeList = () => {
     <div className="p-4">
       <Table
         title="Mentee Management"
-        addButtonText="Add New Mentee"
+        addButtonText="Add New Mentor"
         columns={columns}
         data={mentees}
         onAddNew={handleAddNew}

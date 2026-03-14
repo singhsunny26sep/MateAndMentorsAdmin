@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Save, User, Mail, Phone, BookOpen, Target } from "lucide-react";
+import { ArrowLeft, Save, User, Mail, Phone, BookOpen, Target, Globe } from "lucide-react";
 import { toast } from "react-hot-toast";
 
 const MenteeAdd = () => {
@@ -9,6 +9,7 @@ const MenteeAdd = () => {
     name: "",
     email: "",
     phone: "",
+    language: "",
     interests: "",
     goals: "",
     bio: "",
@@ -62,7 +63,7 @@ const MenteeAdd = () => {
             className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
           >
             <ArrowLeft className="w-5 h-5 mr-2" />
-            Back to Mentees
+            Back to MentorList
           </button>
         </div>
 
@@ -74,7 +75,7 @@ const MenteeAdd = () => {
             </div>
             <div>
               <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 to-rose-500 bg-clip-text text-transparent">
-                Add New Mate
+                Add New Mentor
               </h1>
               <p className="text-gray-500 text-sm">
                 Fill in the details to create a new mentee profile
@@ -156,6 +157,37 @@ const MenteeAdd = () => {
               {errors.phone && (
                 <p className="mt-1 text-sm text-red-500">{errors.phone}</p>
               )}
+            </div>
+
+            {/* Language */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Preferred Language
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Globe className="h-5 w-5 text-gray-400" />
+                </div>
+                <select
+                  name="language"
+                  value={formData.language}
+                  onChange={handleChange}
+                  className="pl-10 w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none transition-all appearance-none bg-white"
+                >
+                  <option value="">Select preferred language</option>
+                  <option value="English">English</option>
+                  <option value="Hindi">Hindi</option>
+                  <option value="Marathi">Marathi</option>
+                  <option value="Gujarati">Gujarati</option>
+                  <option value="Tamil">Tamil</option>
+                  <option value="Telugu">Telugu</option>
+                  <option value="Kannada">Kannada</option>
+                  <option value="Malayalam">Malayalam</option>
+                  <option value="Bengali">Bengali</option>
+                  <option value="Punjabi">Punjabi</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
             </div>
 
             {/* Interests */}
