@@ -104,7 +104,7 @@ const MateList = () => {
                           )}
                         </div>
                         <div className="ml-4">
-                          <div className="text-sm font-medium text-gray-900">
+                          <div className="text-sm font-medium capitalize text-gray-900">
                             {mate.name}
                           </div>
                           <div className="text-xs text-gray-500 capitalize">

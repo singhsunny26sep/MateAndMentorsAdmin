@@ -316,12 +316,6 @@ const MateEdit = () => {
               </div>
             </div>
 
-            {/* Specifications */}
-       
-
-            {/* FCM Token */}
-           
-            {/* Submit Button */}
             <div className="flex justify-end pt-4">
               <button
                 type="submit"
