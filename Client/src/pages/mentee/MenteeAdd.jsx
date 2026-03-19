@@ -75,7 +75,7 @@ const MenteeAdd = () => {
             </div>
             <div>
               <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 to-rose-500 bg-clip-text text-transparent">
-                Add New Mentor
+                Add New Mentee
               </h1>
               <p className="text-gray-500 text-sm">
                 Fill in the details to create a new mentee profile

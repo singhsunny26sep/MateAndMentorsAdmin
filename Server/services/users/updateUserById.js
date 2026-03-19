@@ -7,12 +7,31 @@ exports.updateUserById = async (userId, payload, image) => {
   const user = await User.findById(userId);
   if (!user || user?.isDeleted) throwError(404, "User not found");
   if (payload) {
-    let { name, email, mobile, dob, address } = payload;
+    let { name, email, mobile, dob, address,  specifications, categoryId, pricePerHour, experience } = payload;
     if (name) user.name = name?.toLowerCase();
     if (address) user.address = address?.toLowerCase();
     if (dob) {
       if (!isAdult(dob)) throwError(400, "User must be at least 18 years old");
       user.dob = dob;
+    }
+    // Handle fcmToken
+    if (fcmToken) {
+      user.fcmToken = fcmToken;
+    }
+    // Handle mate-related fields (specifications, categoryId, pricePerHour, experience)
+    if (specifications || categoryId || pricePerHour || experience) {
+      user.mate = user.mate || {};
+      if (specifications) {
+        // Parse specifications if it's a string (from FormData)
+        if (Array.isArray(specifications)) {
+          user.mate.specifications = specifications;
+        } else if (typeof specifications === "string") {
+          user.mate.specifications = specifications.split(",").map(s => s.trim()).filter(s => s);
+        }
+      }
+      if (categoryId) user.mate.categoryId = categoryId;
+      if (pricePerHour) user.mate.pricePerHour = pricePerHour;
+      if (experience) user.mate.experience = experience;
     }
     if (email && email !== user.email) {
       email = email?.toLowerCase();

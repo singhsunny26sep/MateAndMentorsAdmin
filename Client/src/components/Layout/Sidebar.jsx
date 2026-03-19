@@ -18,6 +18,8 @@ const Sidebar = () => {
       "M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 21.364l-7.682-7.682a4.5 4.5 0 010-6.364z",
     mentors:
       "M17 20h5v-2a4 4 0 00-5-4m-3 6H7v-2a4 4 0 015-4m6-5a3 3 0 11-6 0 3 3 0 016 0zm-8 0a3 3 0 11-6 0 3 3 0 016 0z",
+    mates:
+      "M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z",
     sessions:
       "M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z",
     enquiries:
@@ -54,11 +56,10 @@ const Sidebar = () => {
           },
           {
             name: "Mates",
-            path: "/mentors",
-            icon: icons.mentors,
+            path: "/mates",
+            icon: icons.mates,
             color: "text-blue-500",
           },
-          
           {
             name: "Mentors",
             path: "/mentees",

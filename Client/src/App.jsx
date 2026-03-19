@@ -19,8 +19,10 @@ const LoadingFallback = () => (
 );
 
 import MainLayout from "./components/Layout/MainLayout";
-import MentorAdd from "./pages/mentor/MentorAdd";
 import MenteeAdd from "./pages/mentee/MenteeAdd";
+import MateAdd from "./pages/mate/MateAdd";
+import MateList from "./pages/mate/MateList";
+import MateEdit from "./pages/mate/MateEdit";
 import Users from "./pages/Users";
 
 const Login = lazy(() => import("./pages/Login"));
@@ -28,7 +30,6 @@ const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Profile = lazy(() => import("./pages/Profile"));
 const CategoryPage = lazy(() => import("./pages/category/categoryPage"));
 const CategoryAddEdit = lazy(() => import("./pages/category/CategoryAddEdit"));
-const MentorList = lazy(() => import("./pages/mentor/MentorList"));
 const MenteeList = lazy(() => import("./pages/mentee/MenteeList"));
 
 const queryClient = new QueryClient({
@@ -54,10 +55,11 @@ const App = () => {
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/users" element={<Users />} />
-                <Route path="/mentors" element={<MentorList />} />
-                <Route path="/mentor/add" element={<MentorAdd />} />
                 <Route path="/mentees" element={<MenteeList />} />
                 <Route path="/mentee/add" element={<MenteeAdd />} />
+                <Route path="/mate/add" element={<MateAdd />} />
+                <Route path="/mates" element={<MateList />} />
+                <Route path="/mate/edit/:id" element={<MateEdit />} />
 
 
                 <Route path="/category/add" element={<CategoryAddEdit />} />

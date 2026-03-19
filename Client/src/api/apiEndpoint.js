@@ -1,6 +1,7 @@
 const API_ENDPOINTS = {
   AUTH: {
     LOGIN: "/auth/login",
+    REGISTER: "/auth/register",
     PROFILE: "/users/get",
   },
   USER: {
@@ -23,6 +24,13 @@ const API_ENDPOINTS = {
     GET_ONE: "/mentors/get/:id",
     UPDATE: "/mentors/update/:id",
     DELETE: "/mentors/delete/:id",
+  },
+  MATES: {
+    CREATE: "/mates/create",
+    GET_ALL: "/mates/getAll",
+    GET_ONE: "/mates/get/:id",
+    UPDATE: "/mates/update/:id",
+    DELETE: "/mates/delete/:id",
   },
   MENTEES: {
     CREATE: "/mentees/create",

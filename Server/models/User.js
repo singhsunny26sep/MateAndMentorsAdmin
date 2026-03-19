@@ -55,6 +55,13 @@ const userSchema = new mongoose.Schema(
     isOnline: { type: Boolean },
     isActive: { type: Boolean, default: true },
     isDeleted: { type: Boolean, default: false },
+    // Mate-specific fields
+    mate: {
+      categoryId: { type: String },
+      pricePerHour: { type: Number },
+      experience: { type: Number },
+      specifications: { type: [String], default: [] },
+    },
   },
   { timestamps: true, versionKey: false }
 );

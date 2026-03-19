@@ -12,6 +12,7 @@ const MentorAdd = () => {
     language: "",
     expertise: "",
     experience: "",
+    perMinRate: "",
     bio: "",
   });
   const [errors, setErrors] = useState({});
@@ -66,7 +67,6 @@ const MentorAdd = () => {
             Back to Mentors
           </button>
         </div>
-
         {/* Form Card */}
         <div className="bg-white rounded-xl shadow-lg p-8">
           <div className="flex items-center mb-6">
@@ -82,9 +82,7 @@ const MentorAdd = () => {
               </p>
             </div>
           </div>
-
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Name */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Full Name <span className="text-red-500">*</span>
@@ -231,6 +229,28 @@ const MentorAdd = () => {
                   onChange={handleChange}
                   className="pl-10 w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                   placeholder="e.g., 5 years"
+                />
+              </div>
+            </div>
+
+            {/* Per Min Rate */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Per Min Rate (₹)
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <span className="text-gray-400 font-medium">₹</span>
+                </div>
+                <input
+                  type="number"
+                  name="perMinRate"
+                  value={formData.perMinRate}
+                  onChange={handleChange}
+                  className="pl-10 w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                  placeholder="Enter rate per minute"
+                  min="0"
+                  step="0.01"
                 />
               </div>
             </div>

@@ -21,6 +21,25 @@ exports.validateUpdateUser = (data) => {
       "number.min": "Mobile number must be 10 digits",
       "number.max": "Mobile number must be 10 digits",
     }),
+    fcmToken: Joi.string().allow("").messages({
+      "string.base": "FCM token must be a string",
+    }),
+    specifications: Joi.alternatives().try(
+      Joi.array().items(Joi.string()),
+      Joi.string()
+    ).messages({
+      "array.base": "Specifications must be an array",
+      "string.base": "Specifications must be a string or array",
+    }),
+    categoryId: Joi.string().allow("").messages({
+      "string.base": "Category ID must be a string",
+    }),
+    pricePerHour: Joi.number().allow("").messages({
+      "number.base": "Price per hour must be a number",
+    }),
+    experience: Joi.number().allow("").messages({
+      "number.base": "Experience must be a number",
+    }),
   });
   return schema.validate(data, { abortEarly: false });
 };
