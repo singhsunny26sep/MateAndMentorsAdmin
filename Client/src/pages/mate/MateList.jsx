@@ -63,24 +63,18 @@ const MateList = () => {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Contact
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Category
-                  </th>
+               
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Price/Hour
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Experience
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Specifications
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
+               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Action
                   </th>
+             
+               
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -129,53 +123,17 @@ const MateList = () => {
                         )}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {mate.category ? (
-                        <div className="flex items-center">
-                          {mate.category.image && (
-                            <img
-                              className="h-8 w-8 rounded-full mr-2 object-cover"
-                              src={mate.category.image}
-                              alt={mate.category.name}
-                            />
-                          )}
-                          <span className="text-sm text-gray-900 capitalize">
-                            {mate.category.name}
-                          </span>
-                        </div>
-                      ) : (
-                        <span className="text-sm text-gray-400">-</span>
-                      )}
-                    </td>
+                  
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center text-sm font-medium text-green-600">
-                        <DollarSign className="w-4 h-4 mr-1" />
-                        {mate.mate?.pricePerHour || "-"}
+                       <p className="text-green-600 font-bold">
+  {mate.mate?.currency === "INR" ? "" : "₹"} {mate.mate?.price}
+</p>
+                        {mate.mate?.pricePerMin || "-"}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center text-sm text-gray-500">
-                        <Briefcase className="w-4 h-4 mr-1" />
-                        {mate.mate?.experience ? `${mate.mate.experience} years` : "-"}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex flex-wrap gap-1">
-                        {mate.mate?.specifications?.length > 0 ? (
-                          mate.mate.specifications.map((spec, index) => (
-                            <span
-                              key={index}
-                              className="inline-flex items-center px-2 py-1 text-xs font-medium bg-pink-100 text-pink-800 rounded-full"
-                            >
-                              <Heart className="w-3 h-3 mr-1" />
-                              {spec}
-                            </span>
-                          ))
-                        ) : (
-                          <span className="text-sm text-gray-400">-</span>
-                        )}
-                      </div>
-                    </td>
+                    
+                    
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex flex-col gap-1">
                         <span
