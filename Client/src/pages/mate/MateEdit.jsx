@@ -26,11 +26,15 @@ const MateEdit = () => {
     name: "",
     email: "",
     mobile: "",
-
+    fcmToken: "",
+    categoryId: "",
+    pricePerHour: "",
+    experience: "",
+    specifications: [],
     image: null,
-
+    imagePreview: "",
     languages: [],
-    pricePerMin: 12,
+    pricePerMin: "",
     priceUnit: "RUPEE",
   });
   const [errors, setErrors] = useState({});
@@ -40,22 +44,30 @@ const MateEdit = () => {
 
   // Fetch existing mate data
   const { data: mateData, isLoading: isFetching } = useGetQuery(
-    `/users/get/${id}`,
+    `users/get?userId=${id}`,
     ["mate", id],
   );
 
   // Populate form with existing data
   useEffect(() => {
+    console.log("Fetching mate data for ID:", id);
+    console.log("Mate data response:", mateData);
     if (mateData?.data) {
       const mate = mateData.data;
+      console.log("Mate details:", mate);
       setFormData({
         name: mate.name || "",
         email: mate.email || "",
         mobile: mate.mobile ? String(mate.mobile) : "",
-
-        image: mate.image || "",
+        fcmToken: mate.fcmToken || "",
+        categoryId: mate.mate?.categoryId || mate.categoryId || "",
+        pricePerHour: mate.mate?.pricePerHour || mate.pricePerHour || "",
+        experience: mate.mate?.experience || mate.experience || "",
+        specifications: mate.mate?.specifications || mate.specifications || [],
+        image: null,
+        imagePreview: mate.image || "",
         languages: mate.languages || [],
-        pricePerMin: 12,
+        pricePerMin: mate.mate?.pricePerMin || mate.pricePerMin || "",
         priceUnit: mate.mate?.priceUnit || mate.priceUnit || "RUPEE",
       });
     }
