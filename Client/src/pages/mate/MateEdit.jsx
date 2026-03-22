@@ -1,6 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, Save, User, Mail, Phone, DollarSign, Briefcase, Heart, Image as ImageIcon } from "lucide-react";
+import {
+  ArrowLeft,
+  Save,
+  User,
+  Mail,
+  Phone,
+  DollarSign,
+  Briefcase,
+  Heart,
+  Image as ImageIcon,
+  Globe,
+  Lock,
+} from "lucide-react";
 import { toast } from "react-hot-toast";
 import axiosInstance from "../../api/axiosInstance";
 import { useGetQuery } from "../../api/apiCall";
@@ -14,21 +26,22 @@ const MateEdit = () => {
     name: "",
     email: "",
     mobile: "",
-    fcmToken: "",
-    categoryId: "",
-    pricePerHour: "",
-    experience: "",
-    specifications: [],
+
     image: null,
-    imagePreview: "",
+
+    languages: [],
+    pricePerMin: 12,
+    priceUnit: "RUPEE",
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const languageOptions = ["hindi", "english", "urdu"];
+  const priceUnitOptions = ["RUPEE", "USD"];
 
   // Fetch existing mate data
   const { data: mateData, isLoading: isFetching } = useGetQuery(
     `/users/get/${id}`,
-    ["mate", id]
+    ["mate", id],
   );
 
   // Populate form with existing data
@@ -39,36 +52,18 @@ const MateEdit = () => {
         name: mate.name || "",
         email: mate.email || "",
         mobile: mate.mobile ? String(mate.mobile) : "",
-        fcmToken: mate.fcmToken || "",
-        categoryId: mate.mate?.categoryId || mate.categoryId || "",
-        pricePerHour: mate.mate?.pricePerHour || mate.pricePerHour || "",
-        experience: mate.mate?.experience || mate.experience || "",
-        specifications: mate.mate?.specifications || mate.specifications || [],
-        image: null,
-        imagePreview: mate.image || "",
+
+        image: mate.image || "",
+        languages: mate.languages || [],
+        pricePerMin: 12,
+        priceUnit: mate.mate?.priceUnit || mate.priceUnit || "RUPEE",
       });
     }
   }, [mateData]);
 
-  const specificationOptions = [
-    "Love",
-    "Relationship",
-    "Career",
-    "Finance",
-    "Health",
-    "Education",
-    "Business",
-    "Personal Growth"
-  ];
-
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.name.trim()) {
-      newErrors.name = "Name is required";
-    }
-    if (!formData.pricePerHour.trim()) {
-      newErrors.pricePerHour = "Price per hour is required";
-    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -80,18 +75,13 @@ const MateEdit = () => {
       try {
         // Create FormData
         const data = new FormData();
-        
+
         data.append("name", formData.name);
-        if (formData.fcmToken) data.append("fcmToken", formData.fcmToken);
-        if (formData.categoryId) data.append("categoryId", formData.categoryId);
-        if (formData.pricePerHour) data.append("pricePerHour", formData.pricePerHour);
-        if (formData.experience) data.append("experience", formData.experience);
-        if (formData.specifications.length > 0) {
-          data.append("specifications", formData.specifications);
-        }
-        if (formData.image) {
-          data.append("image", formData.image);
-        }
+
+        if (formData.pricePerMin)
+          data.append("pricePerMin", Number(formData.pricePerMin));
+        if (formData.priceUnit) data.append("priceUnit", formData.priceUnit);
+        
 
         // PUT /users/update?userId={id}
         await axiosInstance.put(`/users/update?userId=${id}`, data, {
@@ -99,7 +89,7 @@ const MateEdit = () => {
             "Content-Type": "multipart/form-data",
           },
         });
-        
+
         toast.success("Mate updated successfully!");
         navigate("/mates");
       } catch (error) {
@@ -108,6 +98,15 @@ const MateEdit = () => {
         setIsSubmitting(false);
       }
     }
+  };
+
+  const handleLanguageChange = (lang) => {
+    setFormData((prev) => {
+      const langs = prev.languages.includes(lang)
+        ? prev.languages.filter((l) => l !== lang)
+        : [...prev.languages, lang];
+      return { ...prev, languages: langs };
+    });
   };
 
   const handleChange = (e) => {
@@ -127,15 +126,6 @@ const MateEdit = () => {
         imagePreview: URL.createObjectURL(file),
       }));
     }
-  };
-
-  const handleSpecificationChange = (spec) => {
-    setFormData((prev) => {
-      const specs = prev.specifications.includes(spec)
-        ? prev.specifications.filter((s) => s !== spec)
-        : [...prev.specifications, spec];
-      return { ...prev, specifications: specs };
-    });
   };
 
   if (isFetching) {
@@ -166,9 +156,7 @@ const MateEdit = () => {
               <h1 className="text-2xl font-bold bg-gradient-to-r from-green-500 to-teal-500 bg-clip-text text-transparent">
                 Edit Mate
               </h1>
-              <p className="text-gray-500 text-sm">
-                Update the mate details
-              </p>
+              <p className="text-gray-500 text-sm">Update the mate details</p>
             </div>
           </div>
 
@@ -201,7 +189,9 @@ const MateEdit = () => {
                   />
                 </label>
               </div>
-              <p className="text-sm text-gray-500 mt-2">Click to upload profile image</p>
+              <p className="text-sm text-gray-500 mt-2">
+                Click to upload profile image
+              </p>
             </div>
 
             {/* Name */}
@@ -267,54 +257,53 @@ const MateEdit = () => {
               </div>
             </div>
 
-            {/* Category ID */}
-            
-            {/* Price Per Hour */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Price Per Hour (₹) <span className="text-red-500">*</span>
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <DollarSign className="h-5 w-5 text-gray-400" />
-                </div>
-                <input
-                  type="number"
-                  name="pricePerHour"
-                  value={formData.pricePerHour}
+            {/* Price Per Min */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Price Unit
+                </label>
+                <select
+                  name="priceUnit"
+                  value={formData.priceUnit}
                   onChange={handleChange}
-                  className={`pl-10 w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all ${
-                    errors.pricePerHour ? "border-red-500" : "border-gray-300"
-                  }`}
-                  placeholder="Enter price per hour"
-                  min="0"
-                />
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all"
+                >
+                  {priceUnitOptions.map((unit) => (
+                    <option key={unit} value={unit}>
+                      {unit}
+                    </option>
+                  ))}
+                </select>
               </div>
-              {errors.pricePerHour && (
-                <p className="mt-1 text-sm text-red-500">{errors.pricePerHour}</p>
-              )}
             </div>
 
-            {/* Experience */}
+            {/* Languages */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Experience (Years)
+                Languages
               </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Briefcase className="h-5 w-5 text-gray-400" />
-                </div>
-                <input
-                  type="number"
-                  name="experience"
-                  value={formData.experience}
-                  onChange={handleChange}
-                  className="pl-10 w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all"
-                  placeholder="Enter years of experience"
-                  min="0"
-                />
+              <div className="flex flex-wrap gap-2">
+                {languageOptions.map((lang) => (
+                  <button
+                    key={lang}
+                    type="button"
+                    onClick={() => handleLanguageChange(lang)}
+                    className={`px-4 py-2 rounded-lg border transition-all ${
+                      formData.languages.includes(lang)
+                        ? "bg-green-500 text-white border-green-500"
+                        : "bg-white text-gray-700 border-gray-300 hover:border-green-500"
+                    }`}
+                  >
+                    {lang.charAt(0).toUpperCase() + lang.slice(1)}
+                  </button>
+                ))}
               </div>
             </div>
+
+            {/* Category ID */}
+
+            {/* Price Per Hour */}
 
             <div className="flex justify-end pt-4">
               <button
