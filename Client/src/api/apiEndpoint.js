@@ -7,6 +7,7 @@ const API_ENDPOINTS = {
   USER: {
     GET_PROFILE: "/users/get",
     UPDATE_PROFILE: "/users/update",
+    GET_ALL: "/users/getAll",
   },
   DASHBOARD: {
     GET_DASHBOARD: "/dashboard",

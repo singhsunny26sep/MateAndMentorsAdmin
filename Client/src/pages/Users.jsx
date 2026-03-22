@@ -1,90 +1,37 @@
 import { useState } from "react";
 import Table from "../components/UI/Table";
+import { useGetQuery } from "../api/apiCall";
+import API_ENDPOINTS from "../api/apiEndpoint";
 
 const Users = () => {
-  const [users] = useState([
-    {
-      _id: "1",
-      name: "Admin User",
-      email: "admin@example.com",
-      mobile: "+1234567890",
-      role: "admin",
-      isActive: true,
-      createdAt: "2024-01-01",
-    },
-    {
-      _id: "2",
-      name: "John Smith",
-      email: "john@example.com",
-      mobile: "+1234567891",
-      role: "mentor",
-      isActive: true,
-      createdAt: "2024-01-15",
-    },
-    {
-      _id: "3",
-      name: "Sarah Johnson",
-      email: "sarah@example.com",
-      mobile: "+1234567892",
-      role: "mentor",
-      isActive: true,
-      createdAt: "2024-02-10",
-    },
-    {
-      _id: "4",
-      name: "Michael Brown",
-      email: "michael@example.com",
-      mobile: "+1234567893",
-      role: "mentee",
-      isActive: true,
-      createdAt: "2024-03-05",
-    },
-    {
-      _id: "5",
-      name: "Emily Davis",
-      email: "emily@example.com",
-      mobile: "+1234567894",
-      role: "mentee",
-      isActive: false,
-      createdAt: "2024-03-20",
-    },
-    {
-      _id: "6",
-      name: "David Wilson",
-      email: "david@example.com",
-      mobile: "+1234567895",
-      role: "user",
-      isActive: true,
-      createdAt: "2024-04-01",
-    },
-    {
-      _id: "7",
-      name: "Lisa Anderson",
-      email: "lisa@example.com",
-      mobile: "+1234567896",
-      role: "mentee",
-      isActive: true,
-      createdAt: "2024-04-15",
-    },
-    {
-      _id: "8",
-      name: "Robert Taylor",
-      email: "robert@example.com",
-      mobile: "+1234567897",
-      role: "mentor",
-      isActive: true,
-      createdAt: "2024-05-01",
-    },
-  ]);
+  const [page, setPage] = useState(1);
+  const [limit] = useState(5);
+
+  const { data } = useGetQuery(
+    `${API_ENDPOINTS.USER.GET_ALL}?page=${page}&limit=${limit}`,
+    ["users", page, limit]
+  );
+
+  const users = data?.data?.data || [];
+  const totalUsers = data?.data?.total || 0;
+  const totalPages = data?.data?.totalPages || 1;
 
   const columns = [
     {
       key: "image",
       title: "Profile",
       render: (user) => (
-        <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold">
-          {user.name.charAt(0)}
-        </div>
+        user.image ? (
+          <img
+            src={user.image}
+            alt={user.name}
+            className="w-12 h-12 rounded-full object-cover"
+          />
+        ) : (
+          <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold">
+            {user.name?.charAt(0)}
+          </div>
+        )
       ),
     },
     {
@@ -114,6 +61,8 @@ const Users = () => {
               ? "bg-blue-100 text-blue-700"
               : user.role === "mentee"
               ? "bg-pink-100 text-pink-700"
+              : user.role === "mate"
+              ? "bg-green-100 text-green-700"
               : "bg-gray-100 text-gray-700"
           }`}
         >
@@ -139,7 +88,11 @@ const Users = () => {
     {
       key: "createdAt",
       title: "Created At",
-      render: (user) => user.createdAt,
+      render: (user) => new Date(user.createdAt).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      }),
     },
   ];
 
@@ -172,10 +125,30 @@ const Users = () => {
         onView={handleView}
         onEdit={handleEdit}
         onDelete={handleDelete}
-        isLoading={false}
       />
+      {totalPages > 1 && (
+        <div className="flex justify-center mt-4 space-x-2">
+          <button
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={page === 1}
+            className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <span className="px-4 py-2">
+            Page {page} of {totalPages}
+          </span>
+          <button
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            disabled={page === totalPages}
+            className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
+      )}
       <div className="mt-4 text-sm text-gray-600">
-        Showing {users.length} users
+        Showing {users.length} of {totalUsers} users
       </div>
     </div>
   );
