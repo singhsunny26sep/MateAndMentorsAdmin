@@ -13,22 +13,22 @@ const MateAdd = () => {
     password: "",
     role: "mate",
     fcmToken: "sdfsdfsdfsdfsd",
-    categoryId: "69b93d8a84815abafa1b8262",
-    pricePerHour: "",
-    experience: "",
-    specifications:[],
+    pricePerMin: "12",
+    priceUnit: "RUPEE",
+  
+    languages: [],
+    image: null,
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const specificationOptions = [
-    "Love",
-    "Relationship",
-    "Career",
-    "Finance",
-    "Health",
-    "Education",
-    "Business",
-    "Personal Growth"
+  const languageOptions = [
+    "hindi",
+    "english"
+  ];
+
+  const priceUnitOptions = [
+    "RUPEE",
+    "USD"
   ];
 
   const validateForm = () => {
@@ -44,9 +44,7 @@ const MateAdd = () => {
     if (!formData.password.trim()) {
       newErrors.password = "Password is required";
     }
-    if (!formData.pricePerHour.trim()) {
-      newErrors.pricePerHour = "Price per hour is required";
-    }
+   
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -65,12 +63,16 @@ const MateAdd = () => {
         data.append("password", formData.password);
         data.append("role", "mate");
         if (formData.fcmToken) data.append("fcmToken", formData.fcmToken);
-        if (formData.categoryId) data.append("categoryId", formData.categoryId);
-        if (formData.pricePerHour) data.append("pricePerHour", formData.pricePerHour);
-        if (formData.experience) data.append("experience", formData.experience);
-        if (formData.specifications.length > 0) {
-          formData.specifications.forEach((spec) => {
-            data.append("specifications[]", spec);
+
+      
+        if (formData.pricePerMin) data.append("pricePerMin", Number(formData.pricePerMin));
+        if (formData.priceUnit) data.append("priceUnit", formData.priceUnit);
+     
+      
+
+        if (formData.languages.length > 0) {
+          formData.languages.forEach((lang) => {
+            data.append("languages[]", lang);
           });
         }
         if (formData.image) {
@@ -87,7 +89,9 @@ const MateAdd = () => {
         toast.success("Mate added successfully!");
         navigate("/mates");
       } catch (error) {
-        toast.error(error?.response?.data?.message || "Failed to add mate");
+        const errorMessage = error?.response?.data?.message || error?.response?.data?.error || "Failed to add mate";
+        toast.error(errorMessage);
+        setErrors({ apiError: errorMessage });
       } finally {
         setIsSubmitting(false);
       }
@@ -100,17 +104,35 @@ const MateAdd = () => {
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
+    if (errors.apiError) {
+      setErrors((prev) => ({ ...prev, apiError: "" }));
+    }
   };
 
   
 
-  const handleSpecificationChange = (spec) => {
+ 
+
+  const handleLanguageChange = (lang) => {
     setFormData((prev) => {
-      const specs = prev.specifications.includes(spec)
-        ? prev.specifications.filter((s) => s !== spec)
-        : [...prev.specifications, spec];
-      return { ...prev, specifications: specs };
+      const langs = prev.languages.includes(lang)
+        ? prev.languages.filter((l) => l !== lang)
+        : [...prev.languages, lang];
+      return { ...prev, languages: langs };
     });
+    if (errors.apiError) {
+      setErrors((prev) => ({ ...prev, apiError: "" }));
+    }
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormData((prev) => ({ ...prev, image: file }));
+    }
+    if (errors.apiError) {
+      setErrors((prev) => ({ ...prev, apiError: "" }));
+    }
   };
 
   return (
@@ -134,9 +156,9 @@ const MateAdd = () => {
               <User className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-cyan-500 bg-clip-text text-transparent">
+              {/* <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-cyan-500 bg-clip-text text-transparent">
                 Add New Mate
-              </h1>
+              </h1> */}
               <p className="text-gray-500 text-sm">
                 Fill in the details to create a new mate profile
               </p>
@@ -145,6 +167,12 @@ const MateAdd = () => {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             
+            {errors.apiError && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+                {errors.apiError}
+              </div>
+            )}
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Full Name <span className="text-red-500">*</span>
@@ -238,89 +266,83 @@ const MateAdd = () => {
             </div>
 
             {/* Category ID */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Category ID
-              </label>
-              <input
-                type="text"
-                name="categoryId"
-                value={formData.categoryId}
-                onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
-                placeholder="Enter category ID"
-              />
-            </div>
+            
 
-            {/* Price Per Hour */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Price Per Hour (₹) <span className="text-red-500">*</span>
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <DollarSign className="h-5 w-5 text-gray-400" />
-                </div>
-                <input
-                  type="number"
-                  name="pricePerHour"
-                  value={formData.pricePerHour}
+            {/* Price Per Min */}
+            <div className="grid grid-cols-2 gap-4">
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Price Unit
+                </label>
+                <select
+                  name="priceUnit"
+                  value={formData.priceUnit}
                   onChange={handleChange}
-                  className={`pl-10 w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all ${
-                    errors.pricePerHour ? "border-red-500" : "border-gray-300"
-                  }`}
-                  placeholder="Enter price per hour"
-                  min="0"
-                />
-              </div>
-              {errors.pricePerHour && (
-                <p className="mt-1 text-sm text-red-500">{errors.pricePerHour}</p>
-              )}
-            </div>
-
-            {/* Experience */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Experience (Years)
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Briefcase className="h-5 w-5 text-gray-400" />
-                </div>
-                <input
-                  type="number"
-                  name="experience"
-                  value={formData.experience}
-                  onChange={handleChange}
-                  className="pl-10 w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
-                  placeholder="Enter years of experience"
-                  min="0"
-                />
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                >
+                  {priceUnitOptions.map((unit) => (
+                    <option key={unit} value={unit}>
+                      {unit}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
 
-            {/* Specifications */}
+            
+         
+
+            {/* Languages */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Specifications
+                Languages
               </label>
               <div className="flex flex-wrap gap-2">
-                {specificationOptions.map((spec) => (
+                {languageOptions.map((lang) => (
                   <button
-                    key={spec}
+                    key={lang}
                     type="button"
-                    onClick={() => handleSpecificationChange(spec)}
-                    className={`flex items-center px-4 py-2 rounded-lg border transition-all ${
-                      formData.specifications.includes(spec)
+                    onClick={() => handleLanguageChange(lang)}
+                    className={`px-4 py-2 rounded-lg border transition-all ${
+                      formData.languages.includes(lang)
                         ? "bg-blue-500 text-white border-blue-500"
                         : "bg-white text-gray-700 border-gray-300 hover:border-blue-500"
                     }`}
                   >
-                    <Heart className="w-4 h-4 mr-2" />
-                    {spec}
+                    {lang.charAt(0).toUpperCase() + lang.slice(1)}
                   </button>
                 ))}
               </div>
+            </div>
+
+            {/* Image Upload */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Upload Image
+              </label>
+              <div className="flex items-center justify-center w-full">
+                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+                  <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                    <ImageIcon className="w-8 h-8 mb-3 text-gray-400" />
+                    <p className="mb-2 text-sm text-gray-500">
+                      <span className="font-semibold">Click to upload</span> or drag and drop
+                    </p>
+                    <p className="text-xs text-gray-500">PNG, JPG or GIF</p>
+                  </div>
+                  <input
+                    type="file"
+                    className="hidden"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                  />
+                </label>
+              </div>
+              {formData.image && (
+                <p className="mt-2 text-sm text-green-500">
+                  Selected: {formData.image.name}
+                </p>
+              )}
             </div>
 
             {/* FCM Token */}

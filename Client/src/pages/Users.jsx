@@ -8,8 +8,8 @@ const Users = () => {
   const [limit] = useState(5);
 
   const { data } = useGetQuery(
-    `${API_ENDPOINTS.USER.GET_ALL}?page=${page}&limit=${limit}`,
-    ["users", page, limit]
+    `${API_ENDPOINTS.USER.GET_ALL}?page=${page}&limit=${limit}&role=user`,
+    ["user", page, limit]
   );
 
   const users = data?.data?.data || [];
