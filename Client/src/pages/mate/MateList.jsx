@@ -1,15 +1,40 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useGetQuery } from "../../api/apiCall";
+import { useGetQuery, useDeleteMutation } from "../../api/apiCall";
 import API_ENDPOINTS from "../../api/apiEndpoint";
-import { Plus, User, Mail, Phone, DollarSign, Briefcase, Heart, Image } from "lucide-react";
+import {
+  Plus,
+  User,
+  Mail,
+  Phone,
+  DollarSign,
+  Briefcase,
+  Heart,
+  Image,
+  Trash2,
+} from "lucide-react";
 import Loader from "../../components/UI/Loader";
 
 const MateList = () => {
-  const { data, isLoading, error } = useGetQuery(
+  const { data, isLoading, error, refetch } = useGetQuery(
     `/users/getAll?page=1&limit=100&role=mate`,
-    ["mates"]
+    ["mates"],
   );
+  const deleteMutation = useDeleteMutation(API_ENDPOINTS.MATES.DELETE, {
+    onSuccess: () => {
+      alert("Mate deleted successfully!");
+      refetch();
+    },
+    onError: (error) => {
+      alert("Failed to delete mate: " + (error?.message || "Unknown error"));
+    },
+  });
+
+  const handleDelete = (mate) => {
+    if (window.confirm(`Are you sure you want to delete ${mate.name}?`)) {
+      deleteMutation.mutate(mate._id);
+    }
+  };
 
   if (isLoading) {
     return <Loader />;
@@ -49,7 +74,9 @@ const MateList = () => {
         <div className="bg-white rounded-xl shadow-lg p-8 text-center">
           <User className="w-16 h-16 text-gray-300 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-700">No mates found</h3>
-          <p className="text-gray-500">Click "Add Mate" to create your first mate</p>
+          <p className="text-gray-500">
+            Click "Add Mate" to create your first mate
+          </p>
         </div>
       ) : (
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
@@ -63,18 +90,16 @@ const MateList = () => {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Contact
                   </th>
-               
+
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Price/Hour
                   </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Status
                   </th>
-               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Action
                   </th>
-             
-               
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -123,17 +148,17 @@ const MateList = () => {
                         )}
                       </div>
                     </td>
-                  
+
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center text-sm font-medium text-green-600">
-                       <p className="text-green-600 font-bold">
-  {mate.mate?.currency === "INR" ? "" : "₹"} {mate.mate?.price}
-</p>
+                        <p className="text-green-600 font-bold">
+                          {mate.mate?.currency === "INR" ? "" : "₹"}{" "}
+                          {mate.mate?.price}
+                        </p>
                         {mate.mate?.pricePerMin || "-"}
                       </div>
                     </td>
-                    
-                    
+
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex flex-col gap-1">
                         <span
@@ -164,6 +189,14 @@ const MateList = () => {
                         >
                           Edit
                         </Link>
+                        <button
+                          onClick={() => handleDelete(mate)}
+                          className="text-red-600 hover:text-red-900 text-sm font-medium flex items-center gap-1"
+                          disabled={deleteMutation.isPending}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                          {deleteMutation.isPending ? "Deleting..." : "Delete"}
+                        </button>
                       </div>
                     </td>
                   </tr>

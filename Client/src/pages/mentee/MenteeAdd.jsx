@@ -108,7 +108,6 @@ const MenteeAdd = () => {
                 <p className="mt-1 text-sm text-red-500">{errors.name}</p>
               )}
             </div>
-
             {/* Email */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
