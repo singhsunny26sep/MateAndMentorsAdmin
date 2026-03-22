@@ -31,7 +31,7 @@ const API_ENDPOINTS = {
     GET_ALL: "/mates/getAll",
     GET_ONE: "/mates/get/:id",
     UPDATE: "/mates/update/:id",
-    DELETE: "/mates/delete/:id",
+    DELETE: "/users/delete?userId=",
   },
   MENTEES: {
     CREATE: "/mentees/create",

@@ -37,7 +37,7 @@ export const usePutMutation = (endpoint, options = {}) => {
 export const useDeleteMutation = (endpoint, options = {}) => {
   return useMutation({
     mutationFn: async (id) => {
-      const response = await axiosInstance.delete(`${endpoint}/${id}`);
+      const response = await axiosInstance.delete(`${endpoint}${id}`);
       return response.data;
     },
     ...options,
