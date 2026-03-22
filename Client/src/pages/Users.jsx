@@ -4,8 +4,8 @@ import { useGetQuery } from "../api/apiCall";
 import API_ENDPOINTS from "../api/apiEndpoint";
 
 const Users = () => {
-  const [page, setPage] = useState(100);
-  const [limit] = useState(500);
+  const [page, setPage] = useState(1);
+  const [limit] = useState(5);
 
   const { data } = useGetQuery(
     `${API_ENDPOINTS.USER.GET_ALL}?page=${page}&limit=${limit}&role=user`,
