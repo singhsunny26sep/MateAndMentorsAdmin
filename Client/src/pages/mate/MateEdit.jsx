@@ -34,12 +34,16 @@ const MateEdit = () => {
     image: null,
     imagePreview: "",
     languages: [],
-    pricePerMin: "",
+    pricePerMin: 12,
     priceUnit: "RUPEE",
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const languageOptions = ["hindi", "english", "urdu"];
+  const languageOptions = [
+    "hindi",
+    "english",
+   
+  ];
   const priceUnitOptions = ["RUPEE", "USD"];
 
   // Fetch existing mate data
@@ -59,11 +63,7 @@ const MateEdit = () => {
         name: mate.name || "",
         email: mate.email || "",
         mobile: mate.mobile ? String(mate.mobile) : "",
-        fcmToken: mate.fcmToken || "",
-        categoryId: mate.mate?.categoryId || mate.categoryId || "",
         pricePerHour: mate.mate?.pricePerHour || mate.pricePerHour || "",
-        experience: mate.mate?.experience || mate.experience || "",
-        specifications: mate.mate?.specifications || mate.specifications || [],
         image: mate.image,
         imagePreview: mate.image || "",
         languages: mate.languages || [],
@@ -75,6 +75,21 @@ const MateEdit = () => {
 
   const validateForm = () => {
     const newErrors = {};
+    
+    if (!formData.name.trim()) {
+      newErrors.name = "Name is required";
+    }
+    
+    if (!formData.pricePerMin) {
+      newErrors.pricePerMin = "Price per minute is required";
+    } else if (isNaN(formData.pricePerMin) || formData.pricePerMin <= 0) {
+      newErrors.pricePerMin = "Price per minute must be a valid positive number";
+    }
+    
+    if (formData.languages.length === 0) {
+      newErrors.languages = "At least one language is required";
+    }
+    
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -87,13 +102,22 @@ const MateEdit = () => {
         // Create FormData
         const data = new FormData();
         data.append("name", formData.name);
+        
         if (formData.pricePerMin)
           data.append("pricePerMin", Number(formData.pricePerMin));
-        if (formData.priceUnit) data.append("priceUnit", formData.priceUnit);
+        if (formData.priceUnit) 
+          data.append("priceUnit", formData.priceUnit);
+        
         // Handle image - only send when user selects a new file
-        // If user doesn't change image, the existing image is preserved
         if (formData.image instanceof File) {
           data.append("image", formData.image);
+        }
+        
+        // Handle languages - append each language separately with the same key
+        if (formData.languages && formData.languages.length > 0) {
+          formData.languages.forEach(language => {
+            data.append("languages", language);
+          });
         }
 
         // PUT /users/update?userId={id}
@@ -119,6 +143,9 @@ const MateEdit = () => {
         : [...prev.languages, lang];
       return { ...prev, languages: langs };
     });
+    if (errors.languages) {
+      setErrors((prev) => ({ ...prev, languages: "" }));
+    }
   };
 
   const handleChange = (e) => {
@@ -249,6 +276,8 @@ const MateEdit = () => {
                 />
               </div>
             </div>
+
+            {/* Mobile Number (Read only) */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Mobile Number
@@ -266,16 +295,24 @@ const MateEdit = () => {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Price Unit
-                </label>
+
+            {/* Price Per Minute */}
+           
+
+            {/* Price Unit */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Price Unit <span className="text-red-500">*</span>
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <DollarSign className="h-5 w-5 text-gray-400" />
+                </div>
                 <select
                   name="priceUnit"
                   value={formData.priceUnit}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all"
+                  className="pl-10 w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all"
                 >
                   {priceUnitOptions.map((unit) => (
                     <option key={unit} value={unit}>
@@ -289,7 +326,7 @@ const MateEdit = () => {
             {/* Languages */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Languages
+                Languages <span className="text-red-500">*</span>
               </label>
               <div className="flex flex-wrap gap-2">
                 {languageOptions.map((lang) => (
@@ -307,12 +344,17 @@ const MateEdit = () => {
                   </button>
                 ))}
               </div>
+              {errors.languages && (
+                <p className="mt-1 text-sm text-red-500">{errors.languages}</p>
+              )}
+              {formData.languages.length > 0 && (
+                <p className="mt-2 text-sm text-gray-500">
+                  Selected: {formData.languages.join(", ")}
+                </p>
+              )}
             </div>
 
-            {/* Category ID */}
-
-            {/* Price Per Hour */}
-
+            {/* Submit Button */}
             <div className="flex justify-end pt-4">
               <button
                 type="submit"

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Save, User, Mail, Phone, DollarSign, Briefcase, Heart, Lock, Image as ImageIcon } from "lucide-react";
+import { ArrowLeft, Save, User, Mail, Phone, DollarSign, Briefcase, Heart, Lock, Image as ImageIcon, Tag } from "lucide-react";
 import { toast } from "react-hot-toast";
 import axiosInstance from "../../api/axiosInstance";
 
@@ -13,19 +13,23 @@ const MateAdd = () => {
     password: "",
     role: "mate",
     fcmToken: "sdfsdfsdfsdfsd",
-    pricePerMin: "12",
+    pricePerMin: 12,
     priceUnit: "RUPEE",
-  
+   
     languages: [],
+ 
     image: null,
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
   const languageOptions = [
     "hindi",
-    "english"
+    "english",
+  
   ];
 
+  
   const priceUnitOptions = [
     "RUPEE",
     "USD"
@@ -64,17 +68,19 @@ const MateAdd = () => {
         data.append("role", "mate");
         if (formData.fcmToken) data.append("fcmToken", formData.fcmToken);
 
-      
         if (formData.pricePerMin) data.append("pricePerMin", Number(formData.pricePerMin));
         if (formData.priceUnit) data.append("priceUnit", formData.priceUnit);
      
-      
 
+        
+
+        // Handle languages (multiple values with same key)
         if (formData.languages.length > 0) {
           formData.languages.forEach((lang) => {
-            data.append("languages[]", lang);
+            data.append("languages", lang);
           });
         }
+
         if (formData.image) {
           data.append("image", formData.image);
         }
@@ -109,10 +115,6 @@ const MateAdd = () => {
     }
   };
 
-  
-
- 
-
   const handleLanguageChange = (lang) => {
     setFormData((prev) => {
       const langs = prev.languages.includes(lang)
@@ -124,6 +126,7 @@ const MateAdd = () => {
       setErrors((prev) => ({ ...prev, apiError: "" }));
     }
   };
+
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -156,9 +159,6 @@ const MateAdd = () => {
               <User className="w-6 h-6 text-white" />
             </div>
             <div>
-              {/* <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-cyan-500 bg-clip-text text-transparent">
-                Add New Mate
-              </h1> */}
               <p className="text-gray-500 text-sm">
                 Fill in the details to create a new mate profile
               </p>
@@ -196,6 +196,7 @@ const MateAdd = () => {
                 <p className="mt-1 text-sm text-red-500">{errors.name}</p>
               )}
             </div>
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Email Address
@@ -265,9 +266,6 @@ const MateAdd = () => {
               )}
             </div>
 
-            {/* Category ID */}
-            
-
             {/* Price Per Min */}
             <div className="grid grid-cols-2 gap-4">
               
@@ -290,13 +288,12 @@ const MateAdd = () => {
               </div>
             </div>
 
-            
-         
-
-            {/* Languages */}
+            {/* Experience */}
+          
+            {/* Languages - Multi-select */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Languages
+                Languages <span className="text-gray-500 text-xs">(Select multiple)</span>
               </label>
               <div className="flex flex-wrap gap-2">
                 {languageOptions.map((lang) => (
@@ -314,6 +311,11 @@ const MateAdd = () => {
                   </button>
                 ))}
               </div>
+              {formData.languages.length > 0 && (
+                <p className="mt-2 text-sm text-gray-500">
+                  Selected: {formData.languages.join(", ")}
+                </p>
+              )}
             </div>
 
             {/* Image Upload */}
@@ -344,9 +346,6 @@ const MateAdd = () => {
                 </p>
               )}
             </div>
-
-            {/* FCM Token */}
-            
 
             {/* Submit Button */}
             <div className="flex justify-end pt-4">
