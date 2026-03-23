@@ -1,5 +1,5 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { useGetQuery, useDeleteMutation } from "../../api/apiCall";
 import API_ENDPOINTS from "../../api/apiEndpoint";
 import {
@@ -16,10 +16,16 @@ import {
 import Loader from "../../components/UI/Loader";
 
 const MateList = () => {
+  const location = useLocation();
   const { data, isLoading, error, refetch } = useGetQuery(
     `/users/getAll?page=1&limit=100&role=mate`,
     ["mates"],
   );
+
+  // Refetch data when navigating back from edit page
+  useEffect(() => {
+    refetch();
+  }, [location.state?.fromEdit, refetch]);
   const deleteMutation = useDeleteMutation(API_ENDPOINTS.MATES.DELETE, {
     onSuccess: () => {
       alert("Mate deleted successfully!");

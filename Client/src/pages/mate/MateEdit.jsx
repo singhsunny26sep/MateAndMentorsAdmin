@@ -64,7 +64,7 @@ const MateEdit = () => {
         pricePerHour: mate.mate?.pricePerHour || mate.pricePerHour || "",
         experience: mate.mate?.experience || mate.experience || "",
         specifications: mate.mate?.specifications || mate.specifications || [],
-        image: null,
+        image: mate.image,
         imagePreview: mate.image || "",
         languages: mate.languages || [],
         pricePerMin: mate.mate?.pricePerMin || mate.pricePerMin || "",
@@ -75,7 +75,6 @@ const MateEdit = () => {
 
   const validateForm = () => {
     const newErrors = {};
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -87,13 +86,15 @@ const MateEdit = () => {
       try {
         // Create FormData
         const data = new FormData();
-
         data.append("name", formData.name);
-
         if (formData.pricePerMin)
           data.append("pricePerMin", Number(formData.pricePerMin));
         if (formData.priceUnit) data.append("priceUnit", formData.priceUnit);
-        
+        // Handle image - only send when user selects a new file
+        // If user doesn't change image, the existing image is preserved
+        if (formData.image instanceof File) {
+          data.append("image", formData.image);
+        }
 
         // PUT /users/update?userId={id}
         await axiosInstance.put(`/users/update?userId=${id}`, data, {
@@ -101,9 +102,8 @@ const MateEdit = () => {
             "Content-Type": "multipart/form-data",
           },
         });
-
         toast.success("Mate updated successfully!");
-        navigate("/mates");
+        navigate("/mates", { state: { fromEdit: true } });
       } catch (error) {
         toast.error(error?.response?.data?.message || "Failed to update mate");
       } finally {
@@ -249,8 +249,6 @@ const MateEdit = () => {
                 />
               </div>
             </div>
-
-            {/* Mobile (Read only) */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Mobile Number
@@ -268,8 +266,6 @@ const MateEdit = () => {
                 />
               </div>
             </div>
-
-            {/* Price Per Min */}
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
