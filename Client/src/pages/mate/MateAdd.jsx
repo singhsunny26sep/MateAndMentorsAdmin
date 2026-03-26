@@ -1,6 +1,18 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Save, User, Mail, Phone, DollarSign, Briefcase, Heart, Lock, Image as ImageIcon, Tag } from "lucide-react";
+import {
+  ArrowLeft,
+  Save,
+  User,
+  Mail,
+  Phone,
+  DollarSign,
+  Briefcase,
+  Heart,
+  Lock,
+  Image as ImageIcon,
+  Tag,
+} from "lucide-react";
 import { toast } from "react-hot-toast";
 import axiosInstance from "../../api/axiosInstance";
 
@@ -15,25 +27,17 @@ const MateAdd = () => {
     fcmToken: "sdfsdfsdfsdfsd",
     pricePerMin: 12,
     priceUnit: "RUPEE",
-   
+bio:"",
     languages: [],
- 
+
     image: null,
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
-  const languageOptions = [
-    "hindi",
-    "english",
-  
-  ];
 
-  
-  const priceUnitOptions = [
-    "RUPEE",
-    "USD"
-  ];
+  const languageOptions = ["hindi", "english"];
+
+  const priceUnitOptions = ["RUPEE", "USD"];
 
   const validateForm = () => {
     const newErrors = {};
@@ -48,7 +52,7 @@ const MateAdd = () => {
     if (!formData.password.trim()) {
       newErrors.password = "Password is required";
     }
-   
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -60,19 +64,19 @@ const MateAdd = () => {
       try {
         // Create FormData
         const data = new FormData();
-        
+
         data.append("name", formData.name);
         if (formData.email) data.append("email", formData.email);
         if (formData.mobile) data.append("mobile", formData.mobile);
+        if (formData.bio) data.append("bio", formData.bio);
+
         data.append("password", formData.password);
         data.append("role", "mate");
         if (formData.fcmToken) data.append("fcmToken", formData.fcmToken);
 
-        if (formData.pricePerMin) data.append("pricePerMin", Number(formData.pricePerMin));
+        if (formData.pricePerMin)
+          data.append("pricePerMin", Number(formData.pricePerMin));
         if (formData.priceUnit) data.append("priceUnit", formData.priceUnit);
-     
-
-        
 
         // Handle languages (multiple values with same key)
         if (formData.languages.length > 0) {
@@ -91,11 +95,14 @@ const MateAdd = () => {
             "Content-Type": "multipart/form-data",
           },
         });
-        
+
         toast.success("Mate added successfully!");
         navigate("/mates");
       } catch (error) {
-        const errorMessage = error?.response?.data?.message || error?.response?.data?.error || "Failed to add mate";
+        const errorMessage =
+          error?.response?.data?.message ||
+          error?.response?.data?.error ||
+          "Failed to add mate";
         toast.error(errorMessage);
         setErrors({ apiError: errorMessage });
       } finally {
@@ -126,7 +133,6 @@ const MateAdd = () => {
       setErrors((prev) => ({ ...prev, apiError: "" }));
     }
   };
-
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -166,7 +172,6 @@ const MateAdd = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            
             {errors.apiError && (
               <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
                 {errors.apiError}
@@ -268,7 +273,6 @@ const MateAdd = () => {
 
             {/* Price Per Min */}
             <div className="grid grid-cols-2 gap-4">
-              
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Price Unit
@@ -287,13 +291,27 @@ const MateAdd = () => {
                 </select>
               </div>
             </div>
-
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Bio
+              </label>
+              <input
+                name="bio"
+                value={formData.bio}
+                onChange={handleChange}
+                className={`pl-10 w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all ${
+                  errors.password ? "border-red-500" : "border-gray-300"
+                }`}
+                placeholder="Enter Bio"
+              />
+            </div>
             {/* Experience */}
-          
+
             {/* Languages - Multi-select */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Languages <span className="text-gray-500 text-xs">(Select multiple)</span>
+                Languages{" "}
+                <span className="text-gray-500 text-xs">(Select multiple)</span>
               </label>
               <div className="flex flex-wrap gap-2">
                 {languageOptions.map((lang) => (
@@ -328,7 +346,8 @@ const MateAdd = () => {
                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
                     <ImageIcon className="w-8 h-8 mb-3 text-gray-400" />
                     <p className="mb-2 text-sm text-gray-500">
-                      <span className="font-semibold">Click to upload</span> or drag and drop
+                      <span className="font-semibold">Click to upload</span> or
+                      drag and drop
                     </p>
                     <p className="text-xs text-gray-500">PNG, JPG or GIF</p>
                   </div>
