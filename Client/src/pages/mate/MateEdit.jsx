@@ -82,6 +82,10 @@ const MateEdit = () => {
       newErrors.name = "Name is required";
     }
     
+    if (!formData.bio.trim()) {
+      newErrors.bio = "Bio is required";
+    }
+    
     if (!formData.pricePerMin) {
       newErrors.pricePerMin = "Price per minute is required";
     } else if (isNaN(formData.pricePerMin) || formData.pricePerMin <= 0) {
@@ -313,12 +317,12 @@ const MateEdit = () => {
                   value={formData.bio}
                   onChange={handleChange}
                   className={`pl-10 w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all ${
-                    errors.name ? "border-red-500" : "border-gray-300"
+                    errors.bio ? "border-red-500" : "border-gray-300"
                   }`}
                   placeholder="Enter mate bio"
                 />
               </div>
-              {errors.name && (
+              {errors.bio && (
                 <p className="mt-1 text-sm text-red-500">{errors.bio}</p>
               )}
             </div>
