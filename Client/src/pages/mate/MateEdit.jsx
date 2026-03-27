@@ -36,6 +36,7 @@ const MateEdit = () => {
     languages: [],
     pricePerMin: 12,
     priceUnit: "RUPEE",
+    bio:""
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -66,6 +67,7 @@ const MateEdit = () => {
         pricePerHour: mate.mate?.pricePerHour || mate.pricePerHour || "",
         image: mate.image,
         imagePreview: mate.image || "",
+        bio:mate.bio,
         languages: mate.languages || [],
         pricePerMin: mate.mate?.pricePerMin || mate.pricePerMin || "",
         priceUnit: mate.mate?.priceUnit || mate.priceUnit || "RUPEE",
@@ -102,6 +104,8 @@ const MateEdit = () => {
         // Create FormData
         const data = new FormData();
         data.append("name", formData.name);
+        data.append("bio", formData.bio);
+
         
         if (formData.pricePerMin)
           data.append("pricePerMin", Number(formData.pricePerMin));
@@ -295,7 +299,29 @@ const MateEdit = () => {
                 />
               </div>
             </div>
-
+     <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+             Bio <span className="text-red-500">*</span>
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <User className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  type="text"
+                  name="bio"
+                  value={formData.bio}
+                  onChange={handleChange}
+                  className={`pl-10 w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all ${
+                    errors.name ? "border-red-500" : "border-gray-300"
+                  }`}
+                  placeholder="Enter mate bio"
+                />
+              </div>
+              {errors.name && (
+                <p className="mt-1 text-sm text-red-500">{errors.bio}</p>
+              )}
+            </div>
             {/* Price Per Minute */}
            
 
