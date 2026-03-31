@@ -3,7 +3,7 @@ const { ROLES, LOGIN_TYPES } = require("../../constants");
 const { asyncWrapper, sendSuccess, throwError } = require("../../utils");
 
 exports.register = asyncWrapper(async (req, res) => {
-  let { name, email, password, mobile, role, loginType, fcmToken } = req.body;
+  let { name, email, password, mobile, role, loginType, fcmToken, bio } = req.body;
   if (!mobile && !email) {
     throwError(422, "Email or Mobile number any one of this is required");
   }
@@ -28,6 +28,7 @@ exports.register = asyncWrapper(async (req, res) => {
     role,
     fcmToken,
     loginType,
+    bio,
     isLoggedIn: true,
     isOnline: true,
   };

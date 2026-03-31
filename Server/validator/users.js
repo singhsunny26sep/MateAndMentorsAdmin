@@ -40,6 +40,10 @@ exports.validateUpdateUser = (data) => {
     experience: Joi.number().allow("").messages({
       "number.base": "Experience must be a number",
     }),
+    bio: Joi.string().allow("").max(500).messages({
+      "string.base": "Bio must be a string",
+      "string.max": "Bio cannot exceed {#limit} characters",
+    }),
   });
   return schema.validate(data, { abortEarly: false });
 };

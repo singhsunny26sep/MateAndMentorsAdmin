@@ -36,15 +36,11 @@ const MateEdit = () => {
     languages: [],
     pricePerMin: 12,
     priceUnit: "RUPEE",
-    bio:""
+    bio: "",
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const languageOptions = [
-    "hindi",
-    "english",
-   
-  ];
+  const languageOptions = ["hindi", "english"];
   const priceUnitOptions = ["RUPEE", "USD"];
 
   // Fetch existing mate data
@@ -67,7 +63,7 @@ const MateEdit = () => {
         pricePerHour: mate.mate?.pricePerHour || mate.pricePerHour || "",
         image: mate.image,
         imagePreview: mate.image || "",
-        bio:mate.bio,
+        bio: mate?.mate.bio,
         languages: mate.languages || [],
         pricePerMin: mate.mate?.pricePerMin || mate.pricePerMin || "",
         priceUnit: mate.mate?.priceUnit || mate.priceUnit || "RUPEE",
@@ -77,25 +73,22 @@ const MateEdit = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    
+
     if (!formData.name.trim()) {
       newErrors.name = "Name is required";
     }
-    
-    if (!formData.bio.trim()) {
-      newErrors.bio = "Bio is required";
-    }
-    
+
     if (!formData.pricePerMin) {
       newErrors.pricePerMin = "Price per minute is required";
     } else if (isNaN(formData.pricePerMin) || formData.pricePerMin <= 0) {
-      newErrors.pricePerMin = "Price per minute must be a valid positive number";
+      newErrors.pricePerMin =
+        "Price per minute must be a valid positive number";
     }
-    
+
     if (formData.languages.length === 0) {
       newErrors.languages = "At least one language is required";
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -110,20 +103,18 @@ const MateEdit = () => {
         data.append("name", formData.name);
         data.append("bio", formData.bio);
 
-        
         if (formData.pricePerMin)
           data.append("pricePerMin", Number(formData.pricePerMin));
-        if (formData.priceUnit) 
-          data.append("priceUnit", formData.priceUnit);
-        
+        if (formData.priceUnit) data.append("priceUnit", formData.priceUnit);
+
         // Handle image - only send when user selects a new file
         if (formData.image instanceof File) {
           data.append("image", formData.image);
         }
-        
+
         // Handle languages - append each language separately with the same key
         if (formData.languages && formData.languages.length > 0) {
-          formData.languages.forEach(language => {
+          formData.languages.forEach((language) => {
             data.append("languages", language);
           });
         }
@@ -303,14 +294,15 @@ const MateEdit = () => {
                 />
               </div>
             </div>
-     <div>
+            <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-             Bio <span className="text-red-500">*</span>
+                Bio
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <User className="h-5 w-5 text-gray-400" />
                 </div>
+             
                 <input
                   type="text"
                   name="bio"
@@ -322,12 +314,9 @@ const MateEdit = () => {
                   placeholder="Enter mate bio"
                 />
               </div>
-              {errors.bio && (
-                <p className="mt-1 text-sm text-red-500">{errors.bio}</p>
-              )}
+              
             </div>
             {/* Price Per Minute */}
-           
 
             {/* Price Unit */}
             <div>

@@ -7,9 +7,10 @@ exports.updateUserById = async (userId, payload, image) => {
   const user = await User.findById(userId);
   if (!user || user?.isDeleted) throwError(404, "User not found");
   if (payload) {
-    let { name, email, mobile, dob, address,  specifications, categoryId, pricePerHour, experience } = payload;
+    let { name, email, mobile, dob, address, bio, fcmToken, specifications, categoryId, pricePerHour, experience } = payload;
     if (name) user.name = name?.toLowerCase();
     if (address) user.address = address?.toLowerCase();
+    if (bio !== undefined) user.bio = bio;
     if (dob) {
       if (!isAdult(dob)) throwError(400, "User must be at least 18 years old");
       user.dob = dob;
